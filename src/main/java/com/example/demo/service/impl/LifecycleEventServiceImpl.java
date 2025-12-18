@@ -1,12 +1,13 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.LifecycleEvent;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.LifecycleEventRepository;
+import com.example.demo.service.LifecycleEventService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,7 +28,7 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
         assetRepo.findById(event.getAsset().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        event.setEventTime(LocalDateTime.now());
+        event.setEventDate(LocalDate.now());
         return lifecycleRepo.save(event);
     }
 

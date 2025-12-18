@@ -1,12 +1,13 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.TransferRecord;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.TransferRecordRepository;
+import com.example.demo.service.TransferRecordService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,7 +28,7 @@ public class TransferRecordServiceImpl implements TransferRecordService {
         assetRepo.findById(record.getAsset().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        record.setTransferDate(LocalDateTime.now());
+        record.setTransferDate(LocalDate.now());
         return transferRepo.save(record);
     }
 
