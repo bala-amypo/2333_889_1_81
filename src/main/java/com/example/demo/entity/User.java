@@ -1,23 +1,20 @@
 package com.example.demo.entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Colum;
 public class User{
     @Id
     private Long id;
-    @Column(unique=true)
-    private String assetTag;
-    private String LAPTOP;
-    private String DESKTOP;
-    private String PRINTER;
-    private String NETWORK DEVICE;
-    private String OTHER;
-    private String model;
-    private LocalDate purchaseDate;
-    private String AVAILABLE;
-    private String ASSIGNED;
-    private String IN_REPAIR;
-    private String TRANSFERRED;
-    private String DISPOSED;
-    private User curentHolder;
+    private String fullName;
+    private String email;
+    private String department;
+    private String ADMIN;
+    private String USER;
+    private String password;
     private LocalDateTime createAt=LocalDateTime.now();
+    
+
+    
+    
     
     
 }
