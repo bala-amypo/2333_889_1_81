@@ -2,6 +2,7 @@ package com.example.demo.entity;
 public class User{
     @Id
     private Long id;
+    @Column(unique=true)
     private String assetTag;
     private String LAPTOP;
     private String DESKTOP;
