@@ -30,5 +30,5 @@ public class Asset {
         if (createdAt == null) createdAt = LocalDateTime.now();
     }
 
-    // getters & setters
+ 
 }
