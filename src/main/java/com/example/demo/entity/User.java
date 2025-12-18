@@ -1,6 +1,6 @@
 package com.example.demo.entity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Colum;
+import java.time.LocalDateTime;
+import jakarta.persistence.Id;
 public class User{
     @Id
     private Long id;
