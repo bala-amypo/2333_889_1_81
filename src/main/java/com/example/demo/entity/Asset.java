@@ -1,2 +1,4 @@
 package com.example.demo.entity;
-publ
+public class Asset{
+    
+}
