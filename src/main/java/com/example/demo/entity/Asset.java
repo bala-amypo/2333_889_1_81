@@ -1,17 +1,19 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "assetTag"))
 public class Asset {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String assetTag;
+
     private String assetType;
     private String model;
     private LocalDate purchaseDate;
@@ -23,7 +25,7 @@ public class Asset {
     private LocalDateTime createdAt;
 
     @PrePersist
-    void init() {
+    public void prePersist() {
         if (status == null) status = "AVAILABLE";
         if (createdAt == null) createdAt = LocalDateTime.now();
     }
