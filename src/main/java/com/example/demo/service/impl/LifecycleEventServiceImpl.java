@@ -28,7 +28,7 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
         assetRepo.findById(event.getAsset().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        event.setEventDate(LocalDate.now());
+        event.setEventTime(LocalDate.now()); // ✅ CORRECT
         return lifecycleRepo.save(event);
     }
 
