@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 public class LifecycleEvent {
@@ -10,36 +10,55 @@ public class LifecycleEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String eventType;
+
+    private LocalDate eventDate;
+
+    private String description;
+
     @ManyToOne
+    @JoinColumn(name = "asset_id")
     private Asset asset;
 
-    private String eventType;
-    private String eventDescription;
-    private LocalDateTime eventDate;
+    // ✅ GETTERS & SETTERS
 
-    @ManyToOne
-    private User performedBy;
-
-    @PrePersist
-    public void prePersist() {
-        this.eventDate = LocalDateTime.now();
+    public Long getId() {
+        return id;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
+    public String getEventType() {
+        return eventType;
+    }
 
-    public String getEventType() { return eventType; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
 
-    public String getEventDescription() { return eventDescription; }
-    public void setEventDescription(String eventDescription) { this.eventDescription = eventDescription; }
+    public LocalDate getEventDate() {
+        return eventDate;
+    }
 
-    public LocalDateTime getEventDate() { return eventDate; }
+    public void setEventDate(LocalDate eventDate) {
+        this.eventDate = eventDate;
+    }
 
-    public User getPerformedBy() { return performedBy; }
-    public void setPerformedBy(User performedBy) { this.performedBy = performedBy; }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
 }
