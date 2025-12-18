@@ -28,12 +28,13 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
         assetRepo.findById(event.getAsset().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
 
-        event.setEventTime(LocalDate.now()); // ✅ CORRECT
+        // ✅ matches entity field
+        event.setEventTime(LocalDate.now());
         return lifecycleRepo.save(event);
     }
 
     @Override
     public List<LifecycleEvent> getEventsByAsset(Long assetId) {
-        return lifecycleRepo.findByAssetId(assetId);
+        return lifecycleRepo.findByAsset_Id(assetId);
     }
 }
