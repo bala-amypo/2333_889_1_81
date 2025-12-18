@@ -1,9 +1,9 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +12,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepo;
-    private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepo,
-                           PasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.encoder = encoder;
     }
 
     @Override
@@ -25,8 +22,6 @@ public class UserServiceImpl implements UserService {
         if (userRepo.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already exists");
         }
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRole("USER");
         return userRepo.save(user);
     }
 
