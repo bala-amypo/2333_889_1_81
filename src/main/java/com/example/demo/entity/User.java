@@ -1,20 +1,27 @@
 package com.example.demo.entity;
-import java.time.LocalDateTime;
-import jakarta.persistence.Id;
-public class User{
+
+import jakarta.persistence.*;
+import java.time.*;
+
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+public class User {
+
     @Id
+    @GeneratedValue
     private Long id;
+
     private String fullName;
     private String email;
     private String department;
-    private String ADMIN;
-    private String USER;
+    private String role;
     private String password;
-    private LocalDateTime createAt=LocalDateTime.now();
-    
+    private LocalDateTime createdAt;
 
-    
-    
-    
-    
+    @PrePersist
+    void init() {
+        if (role == null) role = "USER";
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
+
 }
