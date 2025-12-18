@@ -1,16 +1,41 @@
-@Override
-public LifecycleEvent createEvent(LifecycleEvent event) {
+package com.example.demo.service.impl;
 
-    assetRepo.findById(event.getAsset().getId())
-            .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+import com.example.demo.entity.LifecycleEvent;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.AssetRepository;
+import com.example.demo.repository.LifecycleEventRepository;
+import com.example.demo.service.LifecycleEventService;
+import org.springframework.stereotype.Service;
 
-    // ✅ MATCHES ENTITY FIELD
-    event.setEventDate(LocalDate.now());
+import java.time.LocalDate;
+import java.util.List;
 
-    return lifecycleRepo.save(event);
-}
+@Service
+public class LifecycleEventServiceImpl implements LifecycleEventService {
 
-@Override
-public List<LifecycleEvent> getEventsByAsset(Long assetId) {
-    return lifecycleRepo.findByAsset_Id(assetId);
+    private final LifecycleEventRepository lifecycleRepo;
+    private final AssetRepository assetRepo;
+
+    public LifecycleEventServiceImpl(LifecycleEventRepository lifecycleRepo,
+                                     AssetRepository assetRepo) {
+        this.lifecycleRepo = lifecycleRepo;
+        this.assetRepo = assetRepo;
+    }
+
+    @Override
+    public LifecycleEvent createEvent(LifecycleEvent event) {
+
+        assetRepo.findById(event.getAsset().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+
+        // ✅ must match entity field name
+        event.setEventDate(LocalDate.now());
+
+        return lifecycleRepo.save(event);
+    }
+
+    @Override
+    public List<LifecycleEvent> getEventsByAsset(Long assetId) {
+        return lifecycleRepo.findByAsset_Id(assetId);
+    }
 }

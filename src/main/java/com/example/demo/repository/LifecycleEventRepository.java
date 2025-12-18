@@ -8,6 +8,5 @@ import java.util.List;
 public interface LifecycleEventRepository
         extends JpaRepository<LifecycleEvent, Long> {
 
-    // ✅ correct JPA property traversal
     List<LifecycleEvent> findByAsset_Id(Long assetId);
 }
