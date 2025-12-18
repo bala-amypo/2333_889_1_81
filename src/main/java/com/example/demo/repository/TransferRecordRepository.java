@@ -8,5 +8,6 @@ import java.util.List;
 public interface TransferRecordRepository
         extends JpaRepository<TransferRecord, Long> {
 
+    // ✅ correct JPA property traversal
     List<TransferRecord> findByAsset_Id(Long assetId);
 }
