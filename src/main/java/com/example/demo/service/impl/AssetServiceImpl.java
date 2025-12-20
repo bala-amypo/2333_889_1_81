@@ -26,7 +26,7 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Asset createAsset(AssetRequest request) {
 
-        User user = userRepository.findById(request.getCurrentHolderId())
+        User holder = userRepository.findById(request.getCurrentHolderId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Asset asset = new Asset();
@@ -35,7 +35,7 @@ public class AssetServiceImpl implements AssetService {
         asset.setModel(request.getModel());
         asset.setPurchaseDate(request.getPurchaseDate());
         asset.setStatus(request.getStatus());
-        asset.setCurrentHolder(user);
+        asset.setCurrentHolder(holder);
 
         return assetRepository.save(asset);
     }
