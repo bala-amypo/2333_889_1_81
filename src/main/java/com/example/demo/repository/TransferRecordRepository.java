@@ -2,12 +2,11 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.TransferRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface TransferRecordRepository
-        extends JpaRepository<TransferRecord, Long> {
-
-    // ✅ correct JPA property traversal
-    List<TransferRecord> findByAsset_Id(Long assetId);
+@Repository
+public interface TransferRecordRepository extends JpaRepository<TransferRecord, Long> {
+    List<TransferRecord> findByAssetId(Long assetId);
 }
