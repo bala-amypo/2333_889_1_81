@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-public class AssetRequest {
+public class AssetStatusUpdateRequest {
 
     private String name;
     private String category;
