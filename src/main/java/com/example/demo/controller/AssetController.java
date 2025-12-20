@@ -16,6 +16,13 @@ public class AssetController {
         this.assetService = assetService;
     }
 
+    // ✅ POST asset
+    @PostMapping
+    public Asset createAsset(@RequestBody Asset asset) {
+        return assetService.createAsset(asset);
+    }
+
+    // ✅ GET all assets
     @GetMapping
     public List<Asset> getAllAssets() {
         return assetService.getAllAssets();
