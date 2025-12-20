@@ -5,11 +5,5 @@ import java.util.List;
 
 public interface AssetService {
 
-    Asset createAsset(Asset asset);
-
     List<Asset> getAllAssets();
-
-    Asset getAsset(Long id);
-
-    Asset updateStatus(Long id, String status);
 }
