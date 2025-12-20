@@ -18,7 +18,7 @@ public class AssetController {
     }
 
     @PostMapping
-    public Asset createAsset(@RequestBody AssetRequest request) {
+    public Asset createAsset(@RequestBody AssetStatusUpdateRequest request) {
         return assetService.createAsset(request);
     }
 
