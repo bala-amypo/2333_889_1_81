@@ -10,13 +10,14 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     private String category;
 
     private String status;
 
-    // ---------- Getters & Setters ----------
+    // -------- Getters & Setters --------
 
     public Long getId() {
         return id;
