@@ -2,7 +2,7 @@ package com.example.demo.dto;
 
 import java.time.LocalDate;
 
-public class AssetRequest {
+public class AssetStatusUpdateRequest {
 
     private String assetTag;
     private String assetType;
