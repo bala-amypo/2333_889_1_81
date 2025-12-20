@@ -10,33 +10,33 @@ import java.util.List;
 
 @Service
 public class AssetServiceImpl implements AssetService {
-
-    private final AssetRepository assetRepo;
-
-    public AssetServiceImpl(AssetRepository assetRepo) {
-        this.assetRepo = assetRepo;
+    
+    private final AssetRepository assetRepository;
+    
+    public AssetServiceImpl(AssetRepository assetRepository) {
+        this.assetRepository = assetRepository;
     }
-
+    
     @Override
     public Asset createAsset(Asset asset) {
-        return assetRepo.save(asset);
+        return assetRepository.save(asset);
     }
-
-    @Override
-    public List<Asset> getAllAssets() {
-        return assetRepo.findAll();
-    }
-
+    
     @Override
     public Asset getAsset(Long id) {
-        return assetRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+        return assetRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
     }
-
+    
     @Override
-    public Asset updateStatus(Long id, String status) {
-        Asset asset = getAsset(id);
+    public List<Asset> getAllAssets() {
+        return assetRepository.findAll();
+    }
+    
+    @Override
+    public Asset updateStatus(Long assetId, String status) {
+        Asset asset = getAsset(assetId);
         asset.setStatus(status);
-        return assetRepo.save(asset);
+        return assetRepository.save(asset);
     }
 }
