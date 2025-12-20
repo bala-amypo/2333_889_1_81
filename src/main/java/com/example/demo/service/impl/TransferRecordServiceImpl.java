@@ -16,12 +16,11 @@ import java.util.List;
 
 @Service
 public class TransferRecordServiceImpl implements TransferRecordService {
-    
+
     private final TransferRecordRepository transferRecordRepository;
     private final AssetRepository assetRepository;
     private final UserRepository userRepository;
-    
-    // CRITICAL: This exact constructor order is required for tests
+
     public TransferRecordServiceImpl(TransferRecordRepository transferRecordRepository,
                                      AssetRepository assetRepository,
                                      UserRepository userRepository) {
@@ -29,45 +28,38 @@ public class TransferRecordServiceImpl implements TransferRecordService {
         this.assetRepository = assetRepository;
         this.userRepository = userRepository;
     }
-    
+
     @Override
     public TransferRecord createTransfer(Long assetId, TransferRecord record) {
-        // Fetch asset
         Asset asset = assetRepository.findById(assetId)
             .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-        
-        // Fetch approver
+
         User approver = userRepository.findById(record.getApprovedBy().getId())
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
-        // Validate approver is ADMIN
+
         if (!"ADMIN".equals(approver.getRole())) {
             throw new ValidationException("Approver must be ADMIN");
         }
-        
-        // Validate departments differ
+
         if (record.getFromDepartment().equals(record.getToDepartment())) {
             throw new ValidationException("From department must differ from to department");
         }
-        
-        // Validate transfer date not in future
+
         if (record.getTransferDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Transfer date cannot be in the future");
         }
-        
-        // Set relationships
+
         record.setAsset(asset);
         record.setApprovedBy(approver);
-        
-        // Save and return
+
         return transferRecordRepository.save(record);
     }
-    
+
     @Override
     public List<TransferRecord> getTransfersForAsset(Long assetId) {
         return transferRecordRepository.findByAssetId(assetId);
     }
-    
+
     @Override
     public TransferRecord getTransfer(Long id) {
         return transferRecordRepository.findById(id)

@@ -15,13 +15,13 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Disposals", description = "Asset disposal record endpoints")
 public class DisposalRecordController {
-    
+
     private final DisposalRecordService disposalRecordService;
-    
+
     public DisposalRecordController(DisposalRecordService disposalRecordService) {
         this.disposalRecordService = disposalRecordService;
     }
-    
+
     @PostMapping("/{assetId}")
     @Operation(summary = "Create disposal", description = "Creates a disposal record and marks asset as DISPOSED (requires ADMIN)")
     public ResponseEntity<DisposalRecord> createDisposal(@PathVariable Long assetId,
@@ -29,14 +29,14 @@ public class DisposalRecordController {
         DisposalRecord created = disposalRecordService.createDisposal(assetId, disposal);
         return ResponseEntity.ok(created);
     }
-    
+
     @GetMapping
     @Operation(summary = "Get all disposals", description = "Retrieves all disposal records")
     public ResponseEntity<List<DisposalRecord>> getAllDisposals() {
         List<DisposalRecord> disposals = disposalRecordService.getAllDisposals();
         return ResponseEntity.ok(disposals);
     }
-    
+
     @GetMapping("/{id}")
     @Operation(summary = "Get disposal by ID", description = "Retrieves a specific disposal record by ID")
     public ResponseEntity<DisposalRecord> getDisposal(@PathVariable Long id) {

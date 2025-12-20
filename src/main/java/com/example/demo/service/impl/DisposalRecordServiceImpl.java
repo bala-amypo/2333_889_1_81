@@ -16,12 +16,11 @@ import java.util.List;
 
 @Service
 public class DisposalRecordServiceImpl implements DisposalRecordService {
-    
+
     private final DisposalRecordRepository disposalRecordRepository;
     private final AssetRepository assetRepository;
     private final UserRepository userRepository;
-    
-    // CRITICAL: This exact constructor order is required for tests
+
     public DisposalRecordServiceImpl(DisposalRecordRepository disposalRecordRepository,
                                      AssetRepository assetRepository,
                                      UserRepository userRepository) {
@@ -29,47 +28,40 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
         this.assetRepository = assetRepository;
         this.userRepository = userRepository;
     }
-    
+
     @Override
     public DisposalRecord createDisposal(Long assetId, DisposalRecord disposal) {
-        // Fetch asset
         Asset asset = assetRepository.findById(assetId)
             .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-        
-        // Fetch approver
+
         User approver = userRepository.findById(disposal.getApprovedBy().getId())
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
-        // Validate approver is ADMIN
+
         if (!"ADMIN".equals(approver.getRole())) {
             throw new ValidationException("Approver must be ADMIN");
         }
-        
-        // Validate disposal date not in future
+
         if (disposal.getDisposalDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Disposal date cannot be in the future");
         }
-        
-        // Set relationships
+
         disposal.setAsset(asset);
         disposal.setApprovedBy(approver);
-        
-        // Save disposal record
+
         DisposalRecord saved = disposalRecordRepository.save(disposal);
-        
-        // CRITICAL: Update asset status to DISPOSED
+
         asset.setStatus("DISPOSED");
         assetRepository.save(asset);
-        
+
         return saved;
     }
-    
+
     @Override
     public DisposalRecord getDisposal(Long id) {
         return disposalRecordRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Disposal record not found"));
     }
-    
+
     @Override
     public List<DisposalRecord> getAllDisposals() {
         return disposalRecordRepository.findAll();
