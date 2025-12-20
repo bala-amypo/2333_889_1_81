@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.AssetRequest;
+import com.example.demo.dto.AssetStatusUpdateRequest;
 import com.example.demo.entity.Asset;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -24,7 +24,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public Asset createAsset(AssetRequest request) {
+    public Asset createAsset(AssetStatusUpdateRequest request) {
 
         User holder = userRepository.findById(request.getCurrentHolderId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
