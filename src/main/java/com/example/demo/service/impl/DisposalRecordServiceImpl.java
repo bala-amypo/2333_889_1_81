@@ -8,6 +8,7 @@ import com.example.demo.service.DisposalRecordService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class DisposalRecordServiceImpl implements DisposalRecordService {
@@ -29,5 +30,15 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
 
         record.setDisposalDate(LocalDate.now());
         return disposalRepo.save(record);
+    }
+
+    @Override
+    public List<DisposalRecord> getAllDisposals() {
+        return disposalRepo.findAll();
+    }
+
+    @Override
+    public List<DisposalRecord> getDisposalsByAsset(Long assetId) {
+        return disposalRepo.findByAssetId(assetId);
     }
 }
