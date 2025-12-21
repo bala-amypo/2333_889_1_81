@@ -12,7 +12,7 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String assetTag;
 
     private String assetType;
@@ -23,14 +23,15 @@ public class Asset {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void prePersist() {
-        if (status == null) status = "AVAILABLE";
+    public void onCreate() {
         createdAt = LocalDateTime.now();
+        if (status == null) {
+            status = "AVAILABLE";
+        }
     }
 
     public Asset() {}
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
