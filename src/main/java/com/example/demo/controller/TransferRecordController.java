@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.TransferRecord;
 import com.example.demo.service.TransferRecordService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,21 +11,40 @@ import java.util.List;
 @RequestMapping("/api/transfers")
 public class TransferRecordController {
 
-    private final TransferRecordService transferService;
+    private final TransferRecordService transferRecordService;
 
-    public TransferRecordController(TransferRecordService transferService) {
-        this.transferService = transferService;
+    public TransferRecordController(TransferRecordService transferRecordService) {
+        this.transferRecordService = transferRecordService;
     }
 
-    // Create transfer record
-    @PostMapping
-    public TransferRecord createTransfer(@RequestBody TransferRecord record) {
-        return transferService.createTransfer(record);
+    // CREATE (Admin)
+    @PostMapping("/{assetId}")
+    public ResponseEntity<TransferRecord> createTransfer(
+            @PathVariable Long assetId,
+            @RequestBody TransferRecord record) {
+
+        return ResponseEntity.ok(
+                transferRecordService.createTransfer(assetId, record)
+        );
     }
 
-    // Get transfers by asset
+    // READ by Asset
     @GetMapping("/asset/{assetId}")
-    public List<TransferRecord> getTransfersByAsset(@PathVariable Long assetId) {
-        return transferService.getTransfersByAsset(assetId);
+    public ResponseEntity<List<TransferRecord>> getTransfersForAsset(
+            @PathVariable Long assetId) {
+
+        return ResponseEntity.ok(
+                transferRecordService.getTransfersForAsset(assetId)
+        );
     }
+
+    // READ by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<TransferRecord> getTransfer(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                transferRecordService.getTransfer(id)
+        );
+    }
+
+    // Other CRUD operations intentionally left empty
 }
