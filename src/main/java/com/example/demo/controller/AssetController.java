@@ -17,13 +17,24 @@ public class AssetController {
         this.assetService = assetService;
     }
 
+    // ✅ CREATE asset
     @PostMapping
     public Asset createAsset(@RequestBody AssetStatusUpdateRequest request) {
         return assetService.createAsset(request);
     }
 
+    // ✅ GET all assets
     @GetMapping
     public List<Asset> getAllAssets() {
         return assetService.getAllAssets();
+    }
+
+    // ✅ UPDATE asset (PUT)
+    @PutMapping("/{id}")
+    public Asset updateAsset(
+            @PathVariable Long id,
+            @RequestBody AssetStatusUpdateRequest request
+    ) {
+        return assetService.updateAsset(id, request);
     }
 }

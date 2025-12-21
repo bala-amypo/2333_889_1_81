@@ -9,5 +9,7 @@ public interface AssetService {
 
     Asset createAsset(AssetStatusUpdateRequest request);
 
+    Asset updateAsset(Long id, AssetStatusUpdateRequest request);
+
     List<Asset> getAllAssets();
 }

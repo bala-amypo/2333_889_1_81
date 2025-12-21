@@ -9,39 +9,53 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AssetService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class AssetServiceImpl implements AssetService {
 
-    private final AssetRepository assetRepository;
-    private final UserRepository userRepository;
+    private final AssetRepository assetRepo;
+    private final UserRepository userRepo;
 
-    public AssetServiceImpl(AssetRepository assetRepository,
-                            UserRepository userRepository) {
-        this.assetRepository = assetRepository;
-        this.userRepository = userRepository;
+    public AssetServiceImpl(AssetRepository assetRepo, UserRepository userRepo) {
+        this.assetRepo = assetRepo;
+        this.userRepo = userRepo;
     }
 
     @Override
     public Asset createAsset(AssetStatusUpdateRequest request) {
-
-        User holder = userRepository.findById(request.getCurrentHolderId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
         Asset asset = new Asset();
-        asset.setAssetTag(request.getAssetTag());
-        asset.setAssetType(request.getAssetType());
-        asset.setModel(request.getModel());
-        asset.setPurchaseDate(request.getPurchaseDate());
-        asset.setStatus(request.getStatus());
-        asset.setCurrentHolder(holder);
+        mapRequestToAsset(asset, request);
+        return assetRepo.save(asset);
+    }
 
-        return assetRepository.save(asset);
+    @Override
+    public Asset updateAsset(Long id, AssetStatusUpdateRequest request) {
+        Asset asset = assetRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+
+        mapRequestToAsset(asset, request);
+        return assetRepo.save(asset);
     }
 
     @Override
     public List<Asset> getAllAssets() {
-        return assetRepository.findAll();
+        return assetRepo.findAll();
+    }
+
+    // 🔹 COMMON MAPPING LOGIC
+    private void mapRequestToAsset(Asset asset, AssetStatusUpdateRequest request) {
+        asset.setAssetTag(request.getAssetTag());
+        asset.setAssetType(request.getAssetType());
+        asset.setModel(request.getModel());
+        asset.setStatus(request.getStatus());
+        asset.setPurchaseDate(LocalDate.parse(request.getPurchaseDate()));
+
+        if (request.getCurrentHolderId() != null) {
+            User user = userRepo.findById(request.getCurrentHolderId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            asset.setCurrentHolder(user);
+        }
     }
 }
