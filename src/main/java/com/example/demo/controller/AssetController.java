@@ -1,44 +1,45 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import com.example.demo.entity.Asset;
+import com.example.demo.service.AssetService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
 
-@Entity
-public class DisposalRecord {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@RestController
+@RequestMapping("/api/assets")
+@Tag(name = "Asset Controller")
+public class AssetController {
 
-    @OneToOne
-    private Asset asset;
+    private final AssetService assetService;
 
-    private String disposalMethod;
-    private LocalDate disposalDate;
-
-    @ManyToOne
-    private User approvedBy;
-
-    private String notes;
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    public void prePersist() {
-        if (createdAt == null) createdAt = LocalDateTime.now();
+    public AssetController(AssetService assetService) {
+        this.assetService = assetService;
     }
 
-    // getters & setters
-    public Long getId() { return id; }
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
+    // CREATE
+    @PostMapping
+    public Asset createAsset(@RequestBody Asset asset) {
+        return assetService.createAsset(asset);
+    }
 
-    public String getDisposalMethod() { return disposalMethod; }
-    public void setDisposalMethod(String disposalMethod) { this.disposalMethod = disposalMethod; }
+    // READ ALL
+    @GetMapping
+    public List<Asset> getAllAssets() {
+        return assetService.getAllAssets();
+    }
 
-    public LocalDate getDisposalDate() { return disposalDate; }
-    public void setDisposalDate(LocalDate disposalDate) { this.disposalDate = disposalDate; }
+    // READ BY ID
+    @GetMapping("/{id}")
+    public Asset getAsset(@PathVariable Long id) {
+        return assetService.getAsset(id);
+    }
 
-    public User getApprovedBy() { return approvedBy; }
-    public void setApprovedBy(User approvedBy) { this.approvedBy = approvedBy; }
+    // UPDATE STATUS
+    @PutMapping("/status/{id}")
+    public Asset updateStatus(@PathVariable Long id,
+                              @RequestParam String status) {
+        return assetService.updateStatus(id, status);
+    }
 }

@@ -2,21 +2,47 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DisposalRecord;
 import com.example.demo.service.DisposalRecordService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/disposals")
 public class DisposalRecordController {
 
-    private final DisposalRecordService disposalService;
+    private final DisposalRecordService disposalRecordService;
 
-    public DisposalRecordController(DisposalRecordService disposalService) {
-        this.disposalService = disposalService;
+    public DisposalRecordController(DisposalRecordService disposalRecordService) {
+        this.disposalRecordService = disposalRecordService;
     }
 
-    // Create disposal record
-    @PostMapping
-    public DisposalRecord createDisposal(@RequestBody DisposalRecord record) {
-        return disposalService.createDisposal(record);
+    // CREATE (Admin)
+    @PostMapping("/{assetId}")
+    public ResponseEntity<DisposalRecord> createDisposal(
+            @PathVariable Long assetId,
+            @RequestBody DisposalRecord disposal) {
+
+        return ResponseEntity.ok(
+                disposalRecordService.createDisposal(assetId, disposal)
+        );
     }
+
+    // READ ALL
+    @GetMapping
+    public ResponseEntity<List<DisposalRecord>> getAllDisposals() {
+        return ResponseEntity.ok(
+                disposalRecordService.getAllDisposals()
+        );
+    }
+
+    // READ BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<DisposalRecord> getDisposal(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                disposalRecordService.getDisposal(id)
+        );
+    }
+
+    // Other CRUD operations intentionally left empty
 }

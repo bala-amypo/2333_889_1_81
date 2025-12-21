@@ -2,29 +2,40 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.LifecycleEvent;
 import com.example.demo.service.LifecycleEventService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/lifecycle")
+@RequestMapping("/api/lifecycle-events")
 public class LifecycleEventController {
 
-    private final LifecycleEventService lifecycleService;
+    private final LifecycleEventService lifecycleEventService;
 
-    public LifecycleEventController(LifecycleEventService lifecycleService) {
-        this.lifecycleService = lifecycleService;
+    public LifecycleEventController(LifecycleEventService lifecycleEventService) {
+        this.lifecycleEventService = lifecycleEventService;
     }
 
-    // Create lifecycle event (audit trail)
-    @PostMapping
-    public LifecycleEvent createEvent(@RequestBody LifecycleEvent event) {
-        return lifecycleService.createEvent(event);
+    // CREATE: Log a new lifecycle event
+    @PostMapping("/log")
+    public ResponseEntity<LifecycleEvent> logEvent(@RequestParam Long assetId,
+                                                   @RequestParam Long userId,
+                                                   @RequestBody LifecycleEvent event) {
+        LifecycleEvent savedEvent = lifecycleEventService.logEvent(assetId, userId, event);
+        return ResponseEntity.ok(savedEvent);
     }
 
-    // Get lifecycle events by asset
+    // READ: Get events for an asset
     @GetMapping("/asset/{assetId}")
-    public List<LifecycleEvent> getEventsByAsset(@PathVariable Long assetId) {
-        return lifecycleService.getEventsByAsset(assetId);
+    public ResponseEntity<List<LifecycleEvent>> getEventsForAsset(@PathVariable Long assetId) {
+        return ResponseEntity.ok(lifecycleEventService.getEventsForAsset(assetId));
     }
+
+    // READ: Get single event by id
+    @GetMapping("/{id}")
+    public ResponseEntity<LifecycleEvent> getEvent(@PathVariable Long id) {
+        return ResponseEntity.ok(lifecycleEventService.getEvent(id));
+    }
+
+    // Other CRUD operations can be left empty for now
 }
