@@ -1,67 +1,44 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.dto.AssetStatusUpdateRequest;
-import com.example.demo.entity.Asset;
-import com.example.demo.exception.ValidationException;
-import com.example.demo.service.AssetService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import java.util.List;
+@Entity
+public class DisposalRecord {
 
-@RestController
-@RequestMapping("/api/assets")
-@SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "Assets", description = "Asset management endpoints")
-public class AssetController {
-    
-    private final AssetService assetService;
-    
-    public AssetController(AssetService assetService) {
-        this.assetService = assetService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    private Asset asset;
+
+    private String disposalMethod;
+    private LocalDate disposalDate;
+
+    @ManyToOne
+    private User approvedBy;
+
+    private String notes;
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
-    
-    @PostMapping
-    @Operation(summary = "Create asset", description = "Creates a new asset in the system")
-    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
-        if (asset == null) {
-            throw new ValidationException("Asset data cannot be null");
-        }
-        Asset created = assetService.createAsset(asset);
-        return ResponseEntity.ok(created);
-    }
-    
-    @GetMapping
-    @Operation(summary = "Get all assets", description = "Retrieves all assets in the system")
-    public ResponseEntity<List<Asset>> getAllAssets() {
-        List<Asset> assets = assetService.getAllAssets();
-        return ResponseEntity.ok(assets);
-    }
-    
-    @GetMapping("/{id}")
-    @Operation(summary = "Get asset by ID", description = "Retrieves a specific asset by its ID")
-    public ResponseEntity<Asset> getAsset(@PathVariable Long id) {
-        if (id == null) {
-            throw new ValidationException("Asset ID cannot be null");
-        }
-        Asset asset = assetService.getAsset(id);
-        return ResponseEntity.ok(asset);
-    }
-    
-    @PutMapping("/status/{id}")
-    @Operation(summary = "Update asset status", description = "Updates the status of an asset")
-    public ResponseEntity<Asset> updateStatus(@PathVariable Long id, 
-                                              @RequestBody AssetStatusUpdateRequest request) {
-        if (id == null) {
-            throw new ValidationException("Asset ID cannot be null");
-        }
-        if (request == null || request.getStatus() == null || request.getStatus().trim().isEmpty()) {
-            throw new ValidationException("Status is required");
-        }
-        Asset updated = assetService.updateStatus(id, request.getStatus());
-        return ResponseEntity.ok(updated);
-    }
+
+    // getters & setters
+    public Long getId() { return id; }
+    public Asset getAsset() { return asset; }
+    public void setAsset(Asset asset) { this.asset = asset; }
+
+    public String getDisposalMethod() { return disposalMethod; }
+    public void setDisposalMethod(String disposalMethod) { this.disposalMethod = disposalMethod; }
+
+    public LocalDate getDisposalDate() { return disposalDate; }
+    public void setDisposalDate(LocalDate disposalDate) { this.disposalDate = disposalDate; }
+
+    public User getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(User approvedBy) { this.approvedBy = approvedBy; }
 }
