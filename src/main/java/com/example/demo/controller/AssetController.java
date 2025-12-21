@@ -2,39 +2,66 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AssetStatusUpdateRequest;
 import com.example.demo.entity.Asset;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.service.AssetService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/assets")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Assets", description = "Asset management endpoints")
 public class AssetController {
-
+    
     private final AssetService assetService;
-
+    
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
     }
-
-    // ✅ CREATE asset
+    
     @PostMapping
-    public Asset createAsset(@RequestBody AssetStatusUpdateRequest request) {
-        return assetService.createAsset(request);
+    @Operation(summary = "Create asset", description = "Creates a new asset in the system")
+    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
+        if (asset == null) {
+            throw new ValidationException("Asset data cannot be null");
+        }
+        Asset created = assetService.createAsset(asset);
+        return ResponseEntity.ok(created);
     }
-
-    // ✅ GET all assets
+    
     @GetMapping
-    public List<Asset> getAllAssets() {
-        return assetService.getAllAssets();
+    @Operation(summary = "Get all assets", description = "Retrieves all assets in the system")
+    public ResponseEntity<List<Asset>> getAllAssets() {
+        List<Asset> assets = assetService.getAllAssets();
+        return ResponseEntity.ok(assets);
     }
-
-    // ✅ UPDATE asset (PUT)
-    @PutMapping("/{id}")
-    public Asset updateAsset(
-            @PathVariable Long id,
-            @RequestBody AssetStatusUpdateRequest request
-    ) {
-        return assetService.updateAsset(id, request);
+    
+    @GetMapping("/{id}")
+    @Operation(summary = "Get asset by ID", description = "Retrieves a specific asset by its ID")
+    public ResponseEntity<Asset> getAsset(@PathVariable Long id) {
+        if (id == null) {
+            throw new ValidationException("Asset ID cannot be null");
+        }
+        Asset asset = assetService.getAsset(id);
+        return ResponseEntity.ok(asset);
+    }
+    
+    @PutMapping("/status/{id}")
+    @Operation(summary = "Update asset status", description = "Updates the status of an asset")
+    public ResponseEntity<Asset> updateStatus(@PathVariable Long id, 
+                                              @RequestBody AssetStatusUpdateRequest request) {
+        if (id == null) {
+            throw new ValidationException("Asset ID cannot be null");
+        }
+        if (request == null || request.getStatus() == null || request.getStatus().trim().isEmpty()) {
+            throw new ValidationException("Status is required");
+        }
+        Asset updated = assetService.updateStatus(id, request.getStatus());
+        return ResponseEntity.ok(updated);
     }
 }
