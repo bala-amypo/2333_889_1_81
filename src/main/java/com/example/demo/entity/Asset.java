@@ -5,14 +5,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "assets")
 public class Asset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String assetTag;
 
     private String assetType;
@@ -20,18 +19,18 @@ public class Asset {
     private LocalDate purchaseDate;
     private String status;
 
+    @ManyToOne
+    private User currentHolder;
+
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void onCreate() {
-        createdAt = LocalDateTime.now();
-        if (status == null) {
-            status = "AVAILABLE";
-        }
+    public void prePersist() {
+        if (status == null) status = "AVAILABLE";
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
 
-    public Asset() {}
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,6 +48,9 @@ public class Asset {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public User getCurrentHolder() { return currentHolder; }
+    public void setCurrentHolder(User currentHolder) { this.currentHolder = currentHolder; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 }
