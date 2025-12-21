@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,31 +14,76 @@ public class LifecycleEvent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "asset_id")
+    @JoinColumn(name = "asset_id", nullable = false)
+    @JsonBackReference
     private Asset asset;
 
     private String eventType;
-    private String description;
+
+    @Column(nullable = false)
+    private String eventDescription;
+
     private LocalDateTime eventDate;
 
-    @PrePersist
-    public void onCreate() {
-        eventDate = LocalDateTime.now();
+    @ManyToOne
+    @JoinColumn(name = "performed_by", nullable = false)
+    @JsonBackReference
+    private User performedBy;
+
+    public LifecycleEvent() {
     }
 
-    public LifecycleEvent() {}
+    public LifecycleEvent(Long id, Asset asset, String eventType,
+                          String eventDescription, LocalDateTime eventDate,
+                          User performedBy) {
+        this.id = id;
+        this.asset = asset;
+        this.eventType = eventType;
+        this.eventDescription = eventDescription;
+        this.eventDate = eventDate;
+        this.performedBy = performedBy;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @PrePersist
+    public void prePersist() {
+        if (this.eventDate == null) {
+            this.eventDate = LocalDateTime.now();
+        }
+    }
 
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEventType() { return eventType; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
+    public Asset getAsset() {
+        return asset;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
 
-    public LocalDateTime getEventDate() { return eventDate; }
+    public String getEventType() {
+        return eventType;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public User getPerformedBy() {
+        return performedBy;
+    }
+
+    public void setPerformedBy(User performedBy) {
+        this.performedBy = performedBy;
+    }
 }
