@@ -18,7 +18,6 @@ public class AssetController {
         this.assetService = assetService;
     }
 
-    // ✅ FIXED POST
     @PostMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
