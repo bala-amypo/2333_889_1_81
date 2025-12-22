@@ -1,87 +1,11 @@
-package com.example.demo.entity;
+package com.example.demo.repository;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import com.example.demo.entity.LifecycleEvent;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-@Table(name = "lifecycle_events")
-public class LifecycleEvent {
+public interface LifecycleEventRepository extends JpaRepository<LifecycleEvent, Long> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String eventType;
-    private String eventDescription;
-
-    private LocalDateTime eventDate;
-
-    @ManyToOne
-    @JoinColumn(name = "asset_id")
-    @JsonIgnoreProperties({"lifecycleEvents", "transferRecords", "disposalRecord"})
-    private Asset asset;
-
-    @ManyToOne
-    @JoinColumn(name = "performed_by")
-    @JsonIgnoreProperties({"password", "assets"})
-    private User performedBy;
-
-    @PrePersist
-    public void prePersist() {
-        if (eventDate == null) {
-            eventDate = LocalDateTime.now();
-        }
-    }
-
-    // -------- GETTERS & SETTERS --------
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public String getEventDescription() {
-        return eventDescription;
-    }
-
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    public Asset getAsset() {
-        return asset;
-    }
-
-    public User getPerformedBy() {
-        return performedBy;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
-
-    public void setPerformedBy(User performedBy) {
-        this.performedBy = performedBy;
-    }
+    List<LifecycleEvent> findByAssetId(Long assetId);
 }

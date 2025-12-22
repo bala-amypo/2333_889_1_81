@@ -18,6 +18,7 @@ public class LifecycleEventController {
         this.lifecycleEventService = lifecycleEventService;
     }
 
+    // CREATE
     @PostMapping(
         value = "/{assetId}/{userId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -33,13 +34,21 @@ public class LifecycleEventController {
         );
     }
 
+    // READ ALL EVENTS FOR ASSET
     @GetMapping("/asset/{assetId}")
-    public List<LifecycleEvent> getEventsForAsset(@PathVariable Long assetId) {
-        return lifecycleEventService.getEventsForAsset(assetId);
+    public ResponseEntity<List<LifecycleEvent>> getEventsForAsset(
+            @PathVariable Long assetId) {
+
+        return ResponseEntity.ok(
+                lifecycleEventService.getEventsForAsset(assetId)
+        );
     }
 
+    // READ BY ID
     @GetMapping("/{id}")
-    public LifecycleEvent getEvent(@PathVariable Long id) {
-        return lifecycleEventService.getEvent(id);
+    public ResponseEntity<LifecycleEvent> getEvent(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                lifecycleEventService.getEvent(id)
+        );
     }
 }
