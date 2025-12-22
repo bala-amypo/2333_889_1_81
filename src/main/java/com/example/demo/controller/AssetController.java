@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AssetRequest;
+import com.example.demo.dto.AssetStatusUpdateRequest;
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ public class AssetController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Asset createAsset(@RequestBody AssetRequest request) {
+    public Asset createAsset(@RequestBody AssetStatusUpdateRequest request) {
         return assetService.createAsset(request);
     }
 
