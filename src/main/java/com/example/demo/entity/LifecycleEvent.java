@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "lifecycle_events")
 public class LifecycleEvent {
 
     @Id
@@ -13,29 +16,72 @@ public class LifecycleEvent {
     private String eventType;
     private String eventDescription;
 
-    private LocalDateTime eventDate = LocalDateTime.now();
+    private LocalDateTime eventDate;
 
     @ManyToOne
     @JoinColumn(name = "asset_id")
+    @JsonIgnoreProperties({"lifecycleEvents", "transferRecords", "disposalRecord"})
     private Asset asset;
 
     @ManyToOne
     @JoinColumn(name = "performed_by")
+    @JsonIgnoreProperties({"password", "assets"})
     private User performedBy;
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @PrePersist
+    public void prePersist() {
+        if (eventDate == null) {
+            eventDate = LocalDateTime.now();
+        }
+    }
 
-    public String getEventType() { return eventType; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
+    // -------- GETTERS & SETTERS --------
 
-    public String getEventDescription() { return eventDescription; }
-    public void setEventDescription(String eventDescription) { this.eventDescription = eventDescription; }
+    public Long getId() {
+        return id;
+    }
 
-    public Asset getAsset() { return asset; }
-    public void setAsset(Asset asset) { this.asset = asset; }
+    public String getEventType() {
+        return eventType;
+    }
 
-    public User getPerformedBy() { return performedBy; }
-    public void setPerformedBy(User performedBy) { this.performedBy = performedBy; }
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public User getPerformedBy() {
+        return performedBy;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    public void setPerformedBy(User performedBy) {
+        this.performedBy = performedBy;
+    }
 }
