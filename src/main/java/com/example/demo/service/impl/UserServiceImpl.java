@@ -14,16 +14,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    // Constructor Injection
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    // CREATE
     @Override
     public User registerUser(User user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Email already exists");
+            throw new ValidationException("Email already in use");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < 8) {
@@ -37,28 +37,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    // UPDATE
-    @Override
-    public User updateUser(Long id, User updatedUser) {
-
-        User existing = getUser(id);
-
-        existing.setFullName(updatedUser.getFullName());
-        existing.setDepartment(updatedUser.getDepartment());
-        existing.setRole(updatedUser.getRole());
-
-        return userRepository.save(existing);
-    }
-
-    // READ BY ID
     @Override
     public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found with id " + id));
+                        new ResourceNotFoundException("User not found with id " + id)
+                );
     }
 
-    // READ ALL
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
