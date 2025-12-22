@@ -6,8 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/lifecycle-events")
+@RequestMapping("/api/events")
 public class LifecycleEventController {
 
     private final LifecycleEventService lifecycleEventService;
@@ -16,18 +18,39 @@ public class LifecycleEventController {
         this.lifecycleEventService = lifecycleEventService;
     }
 
+    // ✅ POST /api/events/{assetId}/{userId}
     @PostMapping(
-        value = "/log",
+        value = "/{assetId}/{userId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<LifecycleEvent> logEvent(
-            @RequestParam Long assetId,
-            @RequestParam Long userId,
+            @PathVariable Long assetId,
+            @PathVariable Long userId,
             @RequestBody LifecycleEvent event) {
 
         return ResponseEntity.ok(
                 lifecycleEventService.logEvent(assetId, userId, event)
+        );
+    }
+
+    // ✅ GET /api/events/asset/{assetId}
+    @GetMapping("/asset/{assetId}")
+    public ResponseEntity<List<LifecycleEvent>> getEventsForAsset(
+            @PathVariable Long assetId) {
+
+        return ResponseEntity.ok(
+                lifecycleEventService.getEventsForAsset(assetId)
+        );
+    }
+
+    // ✅ GET /api/events/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<LifecycleEvent> getEvent(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                lifecycleEventService.getEvent(id)
         );
     }
 }
