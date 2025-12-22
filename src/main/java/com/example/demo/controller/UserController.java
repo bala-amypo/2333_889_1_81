@@ -25,13 +25,22 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
-    // READ ALL
+    // UPDATE
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(
+            @PathVariable Long id,
+            @RequestBody User user) {
+
+        return ResponseEntity.ok(userService.updateUser(id, user));
+    }
+
+    // GET ALL
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // READ BY ID
+    // GET BY ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
