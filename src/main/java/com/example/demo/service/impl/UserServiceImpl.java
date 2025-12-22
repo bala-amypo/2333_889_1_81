@@ -20,20 +20,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
+
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Email already in use");
+            throw new ValidationException("Email already exists");
         }
+
         if (user.getPassword() == null || user.getPassword().length() < 8) {
             throw new ValidationException("Password must be at least 8 characters");
         }
+
         if (user.getDepartment() == null) {
             throw new ValidationException("Department is required");
         }
-
-        if (user.getRole() == null) user.setRole("USER");
-
-        // Store password as plain text (or implement a dummy encoder if you want)
-        // user.setPassword(user.getPassword());
 
         return userRepository.save(user);
     }
@@ -41,7 +39,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found with id " + id));
     }
 
     @Override
