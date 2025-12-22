@@ -15,32 +15,24 @@ public class UserController {
 
     private final UserService userService;
 
+    // Constructor Injection
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // REGISTER
+    // REGISTER USER
     @PostMapping
     public ResponseEntity<User> registerUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
-    // UPDATE
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable Long id,
-            @RequestBody User user) {
-
-        return ResponseEntity.ok(userService.updateUser(id, user));
-    }
-
-    // GET ALL
+    // GET ALL USERS
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // GET BY ID
+    // GET USER BY ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
