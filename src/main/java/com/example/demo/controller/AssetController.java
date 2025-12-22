@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AssetRequest;
 import com.example.demo.entity.Asset;
 import com.example.demo.service.AssetService;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,22 +11,31 @@ import java.util.List;
 @RequestMapping("/api/assets")
 public class AssetController {
 
-    // private final AssetService assetService;
+    private final AssetService assetService;
 
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
     }
 
-    @PostMapping(
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public Asset createAsset(@RequestBody AssetRequest request) {
-        return assetService.createAsset(request);
+    @PostMapping
+    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
+        return ResponseEntity.ok(assetService.createAsset(asset));
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Asset> getAllAssets() {
-        return assetService.getAllAssets();
+    @GetMapping("/{id}")
+    public ResponseEntity<Asset> getAsset(@PathVariable Long id) {
+        return ResponseEntity.ok(assetService.getAsset(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<Asset>> getAllAssets() {
+        return ResponseEntity.ok(assetService.getAllAssets());
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Asset> updateStatus(@PathVariable Long id,
+                                              @RequestParam String status) {
+        return ResponseEntity.ok(assetService.updateStatus(id, status));
+    }
+
 }
