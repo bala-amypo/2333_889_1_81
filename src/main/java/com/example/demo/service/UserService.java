@@ -7,8 +7,6 @@ public interface UserService {
 
     User registerUser(User user);
 
-    User updateUser(Long id, User user);
-
     User getUser(Long id);
 
     List<User> getAllUsers();
