@@ -18,7 +18,6 @@ public class LifecycleEventController {
         this.lifecycleEventService = lifecycleEventService;
     }
 
-    // ✅ POST /api/events/{assetId}/{userId}
     @PostMapping(
         value = "/{assetId}/{userId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -34,23 +33,13 @@ public class LifecycleEventController {
         );
     }
 
-    // ✅ GET /api/events/asset/{assetId}
     @GetMapping("/asset/{assetId}")
-    public ResponseEntity<List<LifecycleEvent>> getEventsForAsset(
-            @PathVariable Long assetId) {
-
-        return ResponseEntity.ok(
-                lifecycleEventService.getEventsForAsset(assetId)
-        );
+    public List<LifecycleEvent> getEventsForAsset(@PathVariable Long assetId) {
+        return lifecycleEventService.getEventsForAsset(assetId);
     }
 
-    // ✅ GET /api/events/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<LifecycleEvent> getEvent(
-            @PathVariable Long id) {
-
-        return ResponseEntity.ok(
-                lifecycleEventService.getEvent(id)
-        );
+    public LifecycleEvent getEvent(@PathVariable Long id) {
+        return lifecycleEventService.getEvent(id);
     }
 }
