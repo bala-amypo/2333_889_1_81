@@ -1,8 +1,6 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,10 +18,7 @@ public class User {
 
     private String department;
     private String role;
-
-    @JsonIgnore   // 🚨 prevents JSON issues
     private String password;
-
     private LocalDateTime createdAt;
 
     public User() {}
@@ -34,7 +29,7 @@ public class User {
         if (this.createdAt == null) this.createdAt = LocalDateTime.now();
     }
 
-    // ✅ GETTERS & SETTERS
+    // ===== GETTERS =====
     public Long getId() { return id; }
     public String getFullName() { return fullName; }
     public String getEmail() { return email; }
@@ -43,10 +38,12 @@ public class User {
     public String getPassword() { return password; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
+    // ===== SETTERS =====
     public void setId(Long id) { this.id = id; }
     public void setFullName(String fullName) { this.fullName = fullName; }
     public void setEmail(String email) { this.email = email; }
     public void setDepartment(String department) { this.department = department; }
     public void setRole(String role) { this.role = role; }
     public void setPassword(String password) { this.password = password; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

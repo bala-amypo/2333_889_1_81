@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    // CREATE
     @Override
     public User registerUser(User user) {
 
@@ -36,6 +37,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    // UPDATE
+    @Override
+    public User updateUser(Long id, User updatedUser) {
+
+        User existing = getUser(id);
+
+        existing.setFullName(updatedUser.getFullName());
+        existing.setDepartment(updatedUser.getDepartment());
+        existing.setRole(updatedUser.getRole());
+
+        return userRepository.save(existing);
+    }
+
+    // READ BY ID
     @Override
     public User getUser(Long id) {
         return userRepository.findById(id)
@@ -43,6 +58,7 @@ public class UserServiceImpl implements UserService {
                         new ResourceNotFoundException("User not found with id " + id));
     }
 
+    // READ ALL
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
