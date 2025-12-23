@@ -7,32 +7,31 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
 
-    @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-            private Long id;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+private String fullName;
 
-                private String fullName;
+@Column(unique = true, nullable = false)
+private String email;
 
-                    @Column(unique = true, nullable = false)
-                        private String email;
+private String department;
+private String role;
+private String password;
+private LocalDateTime createdAt;
 
-                            private String department;
-                                private String role;
-                                    private String password;
-                                        private LocalDateTime createdAt;
+public User() {}
 
-                                            public User() {}
-
-                                                @PrePersist
-                                                    public void prePersist() {
-                                                            if (role == null) role = "USER";
-                                                                    if (createdAt == null) createdAt = LocalDateTime.now();
+@PrePersist
+public void prePersist() {
+if (role == null) role = "USER";
+if (createdAt == null) createdAt = LocalDateTime.now();
                                                                         }
 
-                                                                            // ✅ GETTERS & SETTERS
-                                                                                public Long getId() { return id; }
-                                                                                    public String getFullName() { return fullName; }
-                                                                                        public String getEmail() { return email; }
+                                                                       
+public Long getId() { return id; }
+public String getFullName() { return fullName; }
+public String getEmail() { return email; }
                                                                                             public String getDepartment() { return department; }
                                                                                                 public String getRole() { return role; }
                                                                                                     public String getPassword() { return password; }
@@ -45,4 +44,3 @@ public class User {
                                                                                                                             public void setRole(String role) { this.role = role; }
                                                                                                                                 public void setPassword(String password) { this.password = password; }
                                                                                                                                 }
-                                                                                                                                
