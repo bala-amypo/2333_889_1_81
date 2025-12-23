@@ -17,7 +17,6 @@ public class TransferRecordController {
         this.transferRecordService = transferRecordService;
     }
 
-    // CREATE (Admin)
     @PostMapping("/{assetId}")
     public ResponseEntity<TransferRecord> createTransfer(
             @PathVariable Long assetId,
@@ -28,7 +27,6 @@ public class TransferRecordController {
         );
     }
 
-    // READ by Asset
     @GetMapping("/asset/{assetId}")
     public ResponseEntity<List<TransferRecord>> getTransfersForAsset(
             @PathVariable Long assetId) {
@@ -38,7 +36,6 @@ public class TransferRecordController {
         );
     }
 
-    // READ by ID
     @GetMapping("/{id}")
     public ResponseEntity<TransferRecord> getTransfer(@PathVariable Long id) {
         return ResponseEntity.ok(
@@ -46,5 +43,4 @@ public class TransferRecordController {
         );
     }
 
-    // Other CRUD operations intentionally left empty
 }

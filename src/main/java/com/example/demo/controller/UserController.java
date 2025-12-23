@@ -16,19 +16,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    // CREATE
+ 
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // READ ALL
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // READ BY ID
+  
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.getUser(id);
