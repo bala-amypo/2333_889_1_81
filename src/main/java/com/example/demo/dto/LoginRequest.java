@@ -1,11 +1,13 @@
 package com.example.demo.dto;
 
 public class LoginRequest {
+    
     private String email;
     private String password;
     
     // No-arg constructor
-    public LoginRequest() {}
+    public LoginRequest() {
+    }
     
     // Parameterized constructor
     public LoginRequest(String email, String password) {

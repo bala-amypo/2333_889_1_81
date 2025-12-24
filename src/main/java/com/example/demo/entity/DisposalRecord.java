@@ -13,10 +13,12 @@ public class DisposalRecord {
     private Long id;
     
     @OneToOne
-    @JoinColumn(name = "asset_id")
+    @JoinColumn(name = "asset_id", nullable = false)
     private Asset asset;
     
+    @Column(nullable = false)
     private String disposalMethod;
+    
     private LocalDate disposalDate;
     
     @ManyToOne
@@ -24,15 +26,17 @@ public class DisposalRecord {
     private User approvedBy;
     
     private String notes;
+    
     private LocalDateTime createdAt;
     
     // No-arg constructor
-    public DisposalRecord() {}
+    public DisposalRecord() {
+    }
     
     // Parameterized constructor
     public DisposalRecord(Long id, Asset asset, String disposalMethod, 
-                          LocalDate disposalDate, User approvedBy, 
-                          String notes, LocalDateTime createdAt) {
+                          LocalDate disposalDate, User approvedBy, String notes, 
+                          LocalDateTime createdAt) {
         this.id = id;
         this.asset = asset;
         this.disposalMethod = disposalMethod;
@@ -44,8 +48,8 @@ public class DisposalRecord {
     
     @PrePersist
     public void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
     

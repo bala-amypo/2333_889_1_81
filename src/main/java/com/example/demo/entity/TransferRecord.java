@@ -1,3 +1,4 @@
+
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -12,11 +13,15 @@ public class TransferRecord {
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "asset_id")
+    @JoinColumn(name = "asset_id", nullable = false)
     private Asset asset;
     
+    @Column(nullable = false)
     private String fromDepartment;
+    
+    @Column(nullable = false)
     private String toDepartment;
+    
     private LocalDate transferDate;
     
     @ManyToOne
@@ -24,7 +29,8 @@ public class TransferRecord {
     private User approvedBy;
     
     // No-arg constructor
-    public TransferRecord() {}
+    public TransferRecord() {
+    }
     
     // Parameterized constructor
     public TransferRecord(Long id, Asset asset, String fromDepartment, 
