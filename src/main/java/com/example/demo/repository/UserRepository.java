@@ -1,36 +1,13 @@
-package com.example.demo.controller;
+package com.example.demo.repository;
 
 import com.example.demo.entity.User;
-import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/users")
-public class UserController {
-
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    // CREATE
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.registerUser(user);
-    }
-
-    // READ ALL
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    // READ BY ID
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUser(id);
-    }
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(String email);
+    Optional<User> findByEmail(String email);
 }
