@@ -12,12 +12,16 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String assetTag;
     
+    @Column(nullable = false)
     private String assetType;
+    
     private String model;
+    
     private LocalDate purchaseDate;
+    
     private String status;
     
     @ManyToOne
@@ -27,7 +31,8 @@ public class Asset {
     private LocalDateTime createdAt;
     
     // No-arg constructor
-    public Asset() {}
+    public Asset() {
+    }
     
     // Parameterized constructor
     public Asset(Long id, String assetTag, String assetType, String model, 
@@ -45,11 +50,11 @@ public class Asset {
     
     @PrePersist
     public void prePersist() {
-        if (status == null) {
-            status = "AVAILABLE";
+        if (this.status == null) {
+            this.status = "AVAILABLE";
         }
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
     

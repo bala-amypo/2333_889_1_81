@@ -13,16 +13,22 @@ public class User {
     
     private String fullName;
     
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     
+    @Column(nullable = false)
     private String department;
+    
     private String role;
+    
+    @Column(nullable = false)
     private String password;
+    
     private LocalDateTime createdAt;
     
     // No-arg constructor
-    public User() {}
+    public User() {
+    }
     
     // Parameterized constructor
     public User(Long id, String fullName, String email, String department, 
@@ -38,11 +44,11 @@ public class User {
     
     @PrePersist
     public void prePersist() {
-        if (role == null) {
-            role = "USER";
+        if (this.role == null) {
+            this.role = "USER";
         }
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
     

@@ -12,11 +12,14 @@ public class LifecycleEvent {
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "asset_id")
+    @JoinColumn(name = "asset_id", nullable = false)
     private Asset asset;
     
+    @Column(nullable = false)
     private String eventType;
+    
     private String eventDescription;
+    
     private LocalDateTime eventDate;
     
     @ManyToOne
@@ -24,7 +27,8 @@ public class LifecycleEvent {
     private User performedBy;
     
     // No-arg constructor
-    public LifecycleEvent() {}
+    public LifecycleEvent() {
+    }
     
     // Parameterized constructor
     public LifecycleEvent(Long id, Asset asset, String eventType, 
@@ -40,8 +44,8 @@ public class LifecycleEvent {
     
     @PrePersist
     public void prePersist() {
-        if (eventDate == null) {
-            eventDate = LocalDateTime.now();
+        if (this.eventDate == null) {
+            this.eventDate = LocalDateTime.now();
         }
     }
     
