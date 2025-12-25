@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/disposals")
-public class DisposalController {
+public class DisposalRecordController { // Class name matches filename
 
     @Autowired
     private DisposalRecordService disposalRecordService;

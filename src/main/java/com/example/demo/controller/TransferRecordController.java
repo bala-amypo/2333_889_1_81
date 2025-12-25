@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transfers")
-public class TransferController {
+public class TransferRecordController { // Class name matches filename
 
     @Autowired
     private TransferRecordService transferRecordService;
