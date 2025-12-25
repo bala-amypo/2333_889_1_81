@@ -13,7 +13,6 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     
-    // Using a fixed key for test compatibility as per test requirements
     private final String SECRET_KEY = "ThisIsASecretKeyForJWTTokenGenerationAndValidation";
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
@@ -41,8 +40,8 @@ public class JwtUtil {
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
-    
-    // Used by tests for parsing
+
+    // This method is used by tests (t69, t70, t71, t72)
     public Jws<Claims> parseToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
     }
