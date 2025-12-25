@@ -17,12 +17,20 @@ public class TransferRecordController {
 
     @PostMapping
     public ResponseEntity<?> createTransfer(@RequestBody TransferRecord record) {
-        Long assetId = record.getAsset() != null ? record.getAsset().getId() : null;
-        return ResponseEntity.ok(transferRecordService.createTransfer(assetId, record));
+        try {
+            Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
+            if (assetId == null) {
+                return ResponseEntity.badRequest().body("Asset ID is required");
+            }
+            TransferRecord savedRecord = transferRecordService.createTransfer(assetId, record);
+            return ResponseEntity.ok(savedRecord);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/asset/{assetId}")
-    public List<TransferRecord> getTransfers(@PathVariable Long assetId) {
+    public List<TransferRecord> getTransfersForAsset(@PathVariable Long assetId) {
         return transferRecordService.getTransfersForAsset(assetId);
     }
 }
