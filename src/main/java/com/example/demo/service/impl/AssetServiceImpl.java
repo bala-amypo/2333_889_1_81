@@ -39,3 +39,4 @@ public Asset updateStatus(Long assetId, String status) {
     asset.setStatus(status);
     return assetRepository.save(asset);
 }
+}
