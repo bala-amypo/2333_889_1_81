@@ -13,20 +13,16 @@ public class DisposalController {
     @Autowired
     private DisposalRecordService disposalRecordService;
 
-    // Test t85: createDisposal
     @PostMapping
     public ResponseEntity<DisposalRecord> createDisposal(@RequestBody DisposalRecord record) {
         Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
-        
         if (assetId == null) {
             return ResponseEntity.badRequest().build();
         }
-
         DisposalRecord savedRecord = disposalRecordService.createDisposal(assetId, record);
         return ResponseEntity.ok(savedRecord);
     }
 
-    // Test t82: disposalRecord_getById_found
     @GetMapping("/{id}")
     public ResponseEntity<DisposalRecord> getDisposalById(@PathVariable Long id) {
         try {

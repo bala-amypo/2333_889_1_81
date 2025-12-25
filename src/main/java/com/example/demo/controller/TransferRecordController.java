@@ -15,26 +15,20 @@ public class TransferController {
     @Autowired
     private TransferRecordService transferRecordService;
 
-    // Test t84 & t86: createTransfer
     @PostMapping
     public ResponseEntity<?> createTransfer(@RequestBody TransferRecord record) {
         try {
-            // Extract Asset ID from the nested object or request body
             Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
-            
             if (assetId == null) {
                 return ResponseEntity.badRequest().body("Asset ID is required");
             }
-
             TransferRecord savedRecord = transferRecordService.createTransfer(assetId, record);
             return ResponseEntity.ok(savedRecord);
         } catch (RuntimeException e) {
-            // Handles ValidationException (e.g., future date)
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // Test t81: transferHistoryForAsset
     @GetMapping("/asset/{assetId}")
     public List<TransferRecord> getTransfersForAsset(@PathVariable Long assetId) {
         return transferRecordService.getTransfersForAsset(assetId);
