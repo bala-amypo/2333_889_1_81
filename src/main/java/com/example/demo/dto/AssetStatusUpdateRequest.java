@@ -1,0 +1,24 @@
+package com.example.demo.dto;
+
+public class AssetStatusUpdateRequest {
+    
+    private String status;
+    
+    // No-arg constructor
+    public AssetStatusUpdateRequest() {
+    }
+    
+    // Parameterized constructor
+    public AssetStatusUpdateRequest(String status) {
+        this.status = status;
+    }
+    
+    // Getters and Setters
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
