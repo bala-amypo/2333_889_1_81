@@ -16,11 +16,20 @@ public class DisposalRecordController {
     @PostMapping
     public ResponseEntity<DisposalRecord> createDisposal(@RequestBody DisposalRecord record) {
         Long assetId = record.getAsset() != null ? record.getAsset().getId() : null;
-        return ResponseEntity.ok(disposalRecordService.createDisposal(assetId, record));
+        if (assetId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        DisposalRecord savedRecord = disposalRecordService.createDisposal(assetId, record);
+        return ResponseEntity.ok(savedRecord);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DisposalRecord> getDisposal(@PathVariable Long id) {
-        return ResponseEntity.ok(disposalRecordService.getDisposal(id));
+    public ResponseEntity<DisposalRecord> getDisposalById(@PathVariable Long id) {
+        try {
+            DisposalRecord record = disposalRecordService.getDisposal(id);
+            return ResponseEntity.ok(record);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
