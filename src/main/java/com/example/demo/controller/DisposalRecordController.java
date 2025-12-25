@@ -8,28 +8,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/disposals")
-public class DisposalRecordController { // Class name matches filename
+public class DisposalRecordController {
 
     @Autowired
     private DisposalRecordService disposalRecordService;
 
     @PostMapping
     public ResponseEntity<DisposalRecord> createDisposal(@RequestBody DisposalRecord record) {
-        Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
-        if (assetId == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        DisposalRecord savedRecord = disposalRecordService.createDisposal(assetId, record);
-        return ResponseEntity.ok(savedRecord);
+        Long assetId = record.getAsset() != null ? record.getAsset().getId() : null;
+        return ResponseEntity.ok(disposalRecordService.createDisposal(assetId, record));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DisposalRecord> getDisposalById(@PathVariable Long id) {
-        try {
-            DisposalRecord record = disposalRecordService.getDisposal(id);
-            return ResponseEntity.ok(record);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<DisposalRecord> getDisposal(@PathVariable Long id) {
+        return ResponseEntity.ok(disposalRecordService.getDisposal(id));
     }
 }

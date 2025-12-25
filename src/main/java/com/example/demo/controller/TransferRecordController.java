@@ -10,27 +10,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transfers")
-public class TransferRecordController { // Class name matches filename
+public class TransferRecordController {
 
     @Autowired
     private TransferRecordService transferRecordService;
 
     @PostMapping
     public ResponseEntity<?> createTransfer(@RequestBody TransferRecord record) {
-        try {
-            Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
-            if (assetId == null) {
-                return ResponseEntity.badRequest().body("Asset ID is required");
-            }
-            TransferRecord savedRecord = transferRecordService.createTransfer(assetId, record);
-            return ResponseEntity.ok(savedRecord);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Long assetId = record.getAsset() != null ? record.getAsset().getId() : null;
+        return ResponseEntity.ok(transferRecordService.createTransfer(assetId, record));
     }
 
     @GetMapping("/asset/{assetId}")
-    public List<TransferRecord> getTransfersForAsset(@PathVariable Long assetId) {
+    public List<TransferRecord> getTransfers(@PathVariable Long assetId) {
         return transferRecordService.getTransfersForAsset(assetId);
     }
 }

@@ -17,10 +17,8 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
 
     @Autowired
     private LifecycleEventRepository lifecycleEventRepository;
-    
     @Autowired
     private AssetRepository assetRepository;
-    
     @Autowired
     private UserRepository userRepository;
 
@@ -28,10 +26,8 @@ public class LifecycleEventServiceImpl implements LifecycleEventService {
     public LifecycleEvent logEvent(Long assetId, Long userId, LifecycleEvent event) {
         Asset asset = assetRepository.findById(assetId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
-        
         event.setAsset(asset);
         event.setPerformedBy(user);
-        
         return lifecycleEventRepository.save(event);
     }
 

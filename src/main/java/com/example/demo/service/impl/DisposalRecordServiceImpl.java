@@ -16,35 +16,28 @@ public class DisposalRecordServiceImpl implements DisposalRecordService {
 
     @Autowired
     private DisposalRecordRepository disposalRecordRepository;
-
     @Autowired
     private AssetRepository assetRepository;
-
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public DisposalRecord createDisposal(Long assetId, DisposalRecord record) {
-        Asset asset = assetRepository.findById(assetId)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-        
-        User approver = userRepository.findById(record.getApprovedBy().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
+        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+        User approver = userRepository.findById(record.getApprovedBy().getId()).orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
 
         record.setAsset(asset);
         record.setApprovedBy(approver);
-        
         DisposalRecord saved = disposalRecordRepository.save(record);
-        
+
         asset.setStatus("DISPOSED");
         assetRepository.save(asset);
-        
+
         return saved;
     }
 
     @Override
     public DisposalRecord getDisposal(Long id) {
-        return disposalRecordRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Disposal record not found"));
+        return disposalRecordRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Disposal record not found"));
     }
 }

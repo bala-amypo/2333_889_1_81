@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
         if (user.getDepartment() == null) {
             throw new ValidationException("Department is required");
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

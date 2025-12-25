@@ -20,20 +20,15 @@ public class TransferRecordServiceImpl implements TransferRecordService {
 
     @Autowired
     private TransferRecordRepository transferRecordRepository;
-
     @Autowired
     private AssetRepository assetRepository;
-
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public TransferRecord createTransfer(Long assetId, TransferRecord record) {
-        Asset asset = assetRepository.findById(assetId)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
-        
-        User approver = userRepository.findById(record.getApprovedBy().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
+        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+        User approver = userRepository.findById(record.getApprovedBy().getId()).orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
 
         if (record.getTransferDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Transfer date cannot be in the future");
