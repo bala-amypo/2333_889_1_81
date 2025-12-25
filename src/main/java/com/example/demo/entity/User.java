@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Column(unique = true)
@@ -31,12 +30,8 @@ public class User {
 
     @PrePersist
     public void prePersist() {
-        if (this.role == null) {
-            this.role = "USER";
-        }
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
+        if (this.role == null) this.role = "USER";
+        if (this.createdAt == null) this.createdAt = LocalDateTime.now();
     }
 
     // Getters and Setters
