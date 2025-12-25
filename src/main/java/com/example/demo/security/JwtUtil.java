@@ -3,6 +3,7 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -37,24 +38,27 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
-    public Claims parseToken(String token) {
+    public Jws<Claims> parseToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseClaimsJws(token);
+    }
+    
+    public Claims extractClaims(String token) {
+        return parseToken(token).getBody();
     }
     
     public String extractUsername(String token) {
-        return parseToken(token).getSubject();
+        return extractClaims(token).getSubject();
     }
     
     public String extractRole(String token) {
-        return (String) parseToken(token).get("role");
+        return (String) extractClaims(token).get("role");
     }
     
     public Long extractUserId(String token) {
-        Object userId = parseToken(token).get("userId");
+        Object userId = extractClaims(token).get("userId");
         if (userId instanceof Integer) {
             return ((Integer) userId).longValue();
         }
@@ -71,6 +75,6 @@ public class JwtUtil {
     }
     
     private boolean isTokenExpired(String token) {
-        return parseToken(token).getExpiration().before(new Date());
+        return extractClaims(token).getExpiration().before(new Date());
     }
 }
