@@ -2,39 +2,38 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DisposalRecord;
 import com.example.demo.service.DisposalRecordService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/disposals")
-@Tag(name = "Disposals", description = "Disposal record management endpoints")
-public class DisposalRecordController {
-    
-    private final DisposalRecordService disposalRecordService;
-    
-    public DisposalRecordController(DisposalRecordService disposalRecordService) {
-        this.disposalRecordService = disposalRecordService;
+public class DisposalController {
+
+    @Autowired
+    private DisposalRecordService disposalRecordService;
+
+    // Test t85: createDisposal
+    @PostMapping
+    public ResponseEntity<DisposalRecord> createDisposal(@RequestBody DisposalRecord record) {
+        Long assetId = (record.getAsset() != null) ? record.getAsset().getId() : null;
+        
+        if (assetId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        DisposalRecord savedRecord = disposalRecordService.createDisposal(assetId, record);
+        return ResponseEntity.ok(savedRecord);
     }
-    
-    @PostMapping("/{assetId}")
-    public ResponseEntity<DisposalRecord> createDisposal(@PathVariable Long assetId,
-                                                         @RequestBody DisposalRecord disposal) {
-        DisposalRecord created = disposalRecordService.createDisposal(assetId, disposal);
-        return ResponseEntity.ok(created);
-    }
-    
-    @GetMapping
-    public ResponseEntity<List<DisposalRecord>> getAllDisposals() {
-        List<DisposalRecord> disposals = disposalRecordService.getAllDisposals();
-        return ResponseEntity.ok(disposals);
-    }
-    
+
+    // Test t82: disposalRecord_getById_found
     @GetMapping("/{id}")
-    public ResponseEntity<DisposalRecord> getDisposal(@PathVariable Long id) {
-        DisposalRecord disposal = disposalRecordService.getDisposal(id);
-        return ResponseEntity.ok(disposal);
+    public ResponseEntity<DisposalRecord> getDisposalById(@PathVariable Long id) {
+        try {
+            DisposalRecord record = disposalRecordService.getDisposal(id);
+            return ResponseEntity.ok(record);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

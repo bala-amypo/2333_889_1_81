@@ -1,75 +1,64 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/auth")
-@Tag(name = "Authentication", description = "Authentication endpoints")
+@RequestMapping("/api/auth")
 public class AuthController {
-    
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
-    
-    public AuthController(AuthenticationManager authenticationManager,
-                         UserService userService,
-                         JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
-    
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
+        // Convert DTO to Entity
         User user = new User();
-        user.setFullName(request.getFullName());
+        user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setDepartment(request.getDepartment());
         user.setPassword(request.getPassword());
+
+        User registeredUser = userService.registerUser(user);
         
-        User createdUser = userService.registerUser(user);
-        
-        AuthResponse response = new AuthResponse();
-        response.setMessage("User registered successfully");
-        response.setUserId(createdUser.getId());
-        response.setEmail(createdUser.getEmail());
-        response.setRole(createdUser.getRole());
-        
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("User registered successfully: " + registeredUser.getEmail());
     }
-    
+
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
+        // Authenticate the user
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        
-        // Get user details
-        User user = userService.getAllUsers().stream()
-                .filter(u -> u.getEmail().equals(request.getEmail()))
-                .findFirst()
-                .orElseThrow();
-        
-        String token = jwtUtil.generateTokenForUser(user);
-        
-        AuthResponse response = new AuthResponse();
-        response.setToken(token);
-        response.setMessage("Login successful");
-        response.setUserId(user.getId());
-        response.setEmail(user.getEmail());
-        response.setRole(user.getRole());
-        
+
+        // Load user details to generate token
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(new HashMap<>(), userDetails.getUsername());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        response.put("type", "Bearer");
+        response.put("email", userDetails.getUsername());
+
         return ResponseEntity.ok(response);
     }
 }
