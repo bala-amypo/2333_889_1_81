@@ -3,7 +3,6 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -19,6 +18,23 @@ public class JwtUtil {
     
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
+    
+    // Inner class to wrap Claims and provide getPayload() method
+    public static class JwtToken {
+        private final Claims claims;
+        
+        public JwtToken(Claims claims) {
+            this.claims = claims;
+        }
+        
+        public Claims getPayload() {
+            return claims;
+        }
+        
+        public Claims getBody() {
+            return claims;
+        }
+    }
     
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
@@ -38,15 +54,17 @@ public class JwtUtil {
         return generateToken(claims, user.getEmail());
     }
     
-    public Jws<Claims> parseToken(String token) {
-        return Jwts.parserBuilder()
+    public JwtToken parseToken(String token) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
-                .parseClaimsJws(token);
+                .parseClaimsJws(token)
+                .getBody();
+        return new JwtToken(claims);
     }
     
     public Claims extractClaims(String token) {
-        return parseToken(token).getBody();
+        return parseToken(token).getPayload();
     }
     
     public String extractUsername(String token) {
