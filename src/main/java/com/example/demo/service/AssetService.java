@@ -8,7 +8,7 @@
 //     Asset getAsset(Long id);
 //     List<Asset> getAllAssets();
 //     Asset updateStatus(Long id, String status);
-// }
+// 
 package com.example.demo.service;
 
 import com.example.demo.entity.Asset;
